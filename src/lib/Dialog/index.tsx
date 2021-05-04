@@ -13,115 +13,118 @@ import clsx from 'clsx';
 
 
 export interface DialogTitleProps {
-    children: React.ReactNode;
-    onClose: () => void;
-    headerContent?: React.ReactNode
-    headerClasses?: Array<string> | string
-    closeButtonClasses?: Array<string> | string
-    isCloseButton?: boolean
+	children: React.ReactNode;
+	onClose: () => void;
+	headerContent?: React.ReactNode;
+	headerClasses?: Array<string> | string;
+	closeButtonClasses?: Array<string> | string;
+	isCloseButton?: boolean;
 }
 export interface DialogProps extends parentDialogProps {
-    handleClose: Function,
-    headerProps?: Pick<DialogTitleProps, 'headerContent' | 'headerClasses' | 'closeButtonClasses' | 'isCloseButton'>
-    contentProps?: DialogContentProps,
-    isActionCloseButton?: boolean,
-    closeButtonText?: string,
-    actionsChildren?: React.ReactNode;
+	handleClose: Function,
+	headerProps?: Pick<DialogTitleProps, 'headerContent' | 'headerClasses' | 'closeButtonClasses' | 'isCloseButton'>;
+	actionsProps?: Pick<DialogActionProps, 'closeButtonClasses' | 'rootClasses'>;
+	contentProps?: DialogContentProps,
+	isActionCloseButton?: boolean,
+	closeButtonText?: string,
+	actionsChildren?: React.ReactNode;
 }
 
 
 
 export const DialogTitle: FC<DialogTitleProps> = props => {
-    const classes = useDialogTitleStyles();
-    const { children, headerContent, headerClasses, closeButtonClasses, isCloseButton = true, onClose } = props;
-    return (
-        <MuiDialogTitle disableTypography className={clsx(classes.root, headerClasses)}>
-            {
-                (headerContent) ? (headerContent) : (
-                    <Typography variant="h6">{children}</Typography>
-                )
-            }
+	const classes = useDialogTitleStyles();
+	const { children, headerContent, headerClasses, closeButtonClasses, isCloseButton = true, onClose } = props;
+	return (
+		<MuiDialogTitle disableTypography className={clsx(classes.root, headerClasses)}>
+			{
+				(headerContent) ? (headerContent) : (
+					<Typography variant="h6">{children}</Typography>
+				)
+			}
 
-            {isCloseButton ? (
-                <IconButton aria-label="close" className={clsx(classes.closeButton, closeButtonClasses)} onClick={onClose}>
-                    <CloseIcon />
-                </IconButton>
-            ) : null}
-        </MuiDialogTitle>
-    );
-}
+			{isCloseButton ? (
+				<IconButton aria-label="close" className={clsx(classes.closeButton, closeButtonClasses)} onClick={onClose}>
+					<CloseIcon />
+				</IconButton>
+			) : null}
+		</MuiDialogTitle>
+	);
+};
 
 export interface DialogActionProps {
-    isCloseButton?: boolean,
-    closeButtonText?: string,
-    actionsChildren?: React.ReactNode,
-    onClose?: Function
+	isCloseButton?: boolean;
+	closeButtonText?: string;
+	actionsChildren?: React.ReactNode;
+	onClose?: Function;
+	closeButtonClasses?: Array<string> | string;
+	rootClasses?: Array<string> | string;
 }
 
 const DialogActions: FC<DialogActionProps> = props => {
-    const { isCloseButton, closeButtonText, actionsChildren, onClose } = props;
-    return (
-        <MuiDialogActions>
-            {
-                (actionsChildren) && actionsChildren
-            }
-            {
-                (isCloseButton && !actionsChildren) &&
-                (
-                    <Button color="primary" onClick={() => { onClose && onClose() }}>
-                        {
-                            (closeButtonText) ? closeButtonText : 'Close'
-                        }
-                    </Button>
-                )
-            }
-        </MuiDialogActions>
-    )
-}
+	const { isCloseButton, closeButtonText, actionsChildren, onClose, closeButtonClasses, rootClasses } = props;
+	return (
+		<MuiDialogActions className={clsx(rootClasses)}>
+			{
+				(actionsChildren) && actionsChildren
+			}
+			{
+				(isCloseButton && !actionsChildren) &&
+				(
+					<Button color="primary" onClick={() => { onClose && onClose(); }} className={clsx(closeButtonClasses)} >
+						{
+							(closeButtonText) ? closeButtonText : 'Close'
+						}
+					</Button>
+				)
+			}
+		</MuiDialogActions>
+	);
+};
 
 
 export const AppDialog: FC<DialogProps> = (props) => {
-    const { title, headerProps, handleClose, children, maxWidth = "sm", contentProps, isActionCloseButton = true, closeButtonText, actionsChildren, ...rest } = props;
+	const { title, headerProps, handleClose, children, maxWidth = "sm", contentProps, isActionCloseButton = true, closeButtonText, actionsChildren, actionsProps, ...rest } = props;
 
-    const handleDialogClose = () => {
-        handleClose();
-    }
-    return (
-        <Dialog onClose={handleDialogClose}
-            fullWidth={true}
-            maxWidth={maxWidth}
-            {...rest}
-        >
-            <DialogTitle onClose={handleDialogClose} {...headerProps}>
-                {title}
-            </DialogTitle>
-            <MuiDialogContent {...contentProps}>{children}</MuiDialogContent>
-            {
-                (isActionCloseButton || actionsChildren) &&
-                (
-                    <DialogActions isCloseButton={isActionCloseButton}
-                        closeButtonText={closeButtonText}
-                        actionsChildren={actionsChildren}
-                        onClose={handleDialogClose}
-                    />
-                )
-            }
+	const handleDialogClose = () => {
+		handleClose();
+	};
+	return (
+		<Dialog onClose={handleDialogClose}
+			fullWidth={true}
+			maxWidth={maxWidth}
+			{...rest}
+		>
+			<DialogTitle onClose={handleDialogClose} {...headerProps}>
+				{title}
+			</DialogTitle>
+			<MuiDialogContent {...contentProps}>{children}</MuiDialogContent>
+			{
+				(isActionCloseButton || actionsChildren) &&
+				(
+					<DialogActions {...actionsProps} isCloseButton={isActionCloseButton}
+						closeButtonText={closeButtonText}
+						actionsChildren={actionsChildren}
+						onClose={handleDialogClose}
+					/>
+				)
+			}
 
-        </Dialog>
-    )
-}
+		</Dialog>
+	);
+};
 
 
 const useDialogTitleStyles = makeStyles<Theme>((theme) => {
-    return (createStyles({
-        root: {},
-        closeButton: {
-            position: 'absolute',
-            right: theme.spacing(1),
-            top: theme.spacing(1),
-            color: theme.palette.grey[500],
-        }
-    }))
-})
+	return (createStyles({
+		root: {},
+		closeButton: {
+			position: 'absolute',
+			right: theme.spacing(1),
+			top: theme.spacing(1),
+			color: theme.palette.grey[500],
+		}
+	}));
+});
 
 export default AppDialog;

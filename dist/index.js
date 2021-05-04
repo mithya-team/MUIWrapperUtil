@@ -69,14 +69,14 @@ var DialogTitle = function (props) {
             React.createElement(CloseIcon, null))) : null));
 };
 var DialogActions = function (props) {
-    var isCloseButton = props.isCloseButton, closeButtonText = props.closeButtonText, actionsChildren = props.actionsChildren, onClose = props.onClose;
-    return (React.createElement(MuiDialogActions, null,
+    var isCloseButton = props.isCloseButton, closeButtonText = props.closeButtonText, actionsChildren = props.actionsChildren, onClose = props.onClose, closeButtonClasses = props.closeButtonClasses, rootClasses = props.rootClasses;
+    return (React.createElement(MuiDialogActions, { className: clsx(rootClasses) },
         (actionsChildren) && actionsChildren,
         (isCloseButton && !actionsChildren) &&
-            (React.createElement(Button, { color: "primary", onClick: function () { onClose && onClose(); } }, (closeButtonText) ? closeButtonText : 'Close'))));
+            (React.createElement(Button, { color: "primary", onClick: function () { onClose && onClose(); }, className: clsx(closeButtonClasses) }, (closeButtonText) ? closeButtonText : 'Close'))));
 };
 var AppDialog = function (props) {
-    var title = props.title, headerProps = props.headerProps, handleClose = props.handleClose, children = props.children, _a = props.maxWidth, maxWidth = _a === void 0 ? "sm" : _a, contentProps = props.contentProps, _b = props.isActionCloseButton, isActionCloseButton = _b === void 0 ? true : _b, closeButtonText = props.closeButtonText, actionsChildren = props.actionsChildren, rest = __rest(props, ["title", "headerProps", "handleClose", "children", "maxWidth", "contentProps", "isActionCloseButton", "closeButtonText", "actionsChildren"]);
+    var title = props.title, headerProps = props.headerProps, handleClose = props.handleClose, children = props.children, _a = props.maxWidth, maxWidth = _a === void 0 ? "sm" : _a, contentProps = props.contentProps, _b = props.isActionCloseButton, isActionCloseButton = _b === void 0 ? true : _b, closeButtonText = props.closeButtonText, actionsChildren = props.actionsChildren, actionsProps = props.actionsProps, rest = __rest(props, ["title", "headerProps", "handleClose", "children", "maxWidth", "contentProps", "isActionCloseButton", "closeButtonText", "actionsChildren", "actionsProps"]);
     var handleDialogClose = function () {
         handleClose();
     };
@@ -84,7 +84,7 @@ var AppDialog = function (props) {
         React.createElement(DialogTitle, __assign({ onClose: handleDialogClose }, headerProps), title),
         React.createElement(MuiDialogContent, __assign({}, contentProps), children),
         (isActionCloseButton || actionsChildren) &&
-            (React.createElement(DialogActions, { isCloseButton: isActionCloseButton, closeButtonText: closeButtonText, actionsChildren: actionsChildren, onClose: handleDialogClose }))));
+            (React.createElement(DialogActions, __assign({}, actionsProps, { isCloseButton: isActionCloseButton, closeButtonText: closeButtonText, actionsChildren: actionsChildren, onClose: handleDialogClose })))));
 };
 var useDialogTitleStyles = styles.makeStyles(function (theme) {
     return (styles.createStyles({

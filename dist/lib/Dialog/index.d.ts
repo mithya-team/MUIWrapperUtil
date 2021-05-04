@@ -12,6 +12,7 @@ export interface DialogTitleProps {
 export interface DialogProps extends parentDialogProps {
     handleClose: Function;
     headerProps?: Pick<DialogTitleProps, 'headerContent' | 'headerClasses' | 'closeButtonClasses' | 'isCloseButton'>;
+    actionsProps?: Pick<DialogActionProps, 'closeButtonClasses' | 'rootClasses'>;
     contentProps?: DialogContentProps;
     isActionCloseButton?: boolean;
     closeButtonText?: string;
@@ -23,6 +24,8 @@ export interface DialogActionProps {
     closeButtonText?: string;
     actionsChildren?: React.ReactNode;
     onClose?: Function;
+    closeButtonClasses?: Array<string> | string;
+    rootClasses?: Array<string> | string;
 }
 export declare const AppDialog: FC<DialogProps>;
 export default AppDialog;
